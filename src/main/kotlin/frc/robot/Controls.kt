@@ -81,9 +81,9 @@ object Controls : Updatable {
             button(8).changeOn(Superstructure.kCargoShip) // .changeOff { Superstructure.kStowed.schedule() }
 
             // hatch presets
-            button(3).changeOn(Superstructure.kHatchLow) // .changeOff { Superstructure.kStowed.schedule() }
-            button(2).changeOn(Superstructure.kHatchMid) // .changeOff { Superstructure.kStowed.schedule() }
-            button(1).changeOn(Superstructure.kHatchHigh) // .changeOff { Superstructure.kStowed.schedule() }
+            button(kA).changeOn(Superstructure.kHatchLow) // .changeOff { Superstructure.kStowed.schedule() }
+            button(kB).changeOn(Superstructure.kHatchMid) // .changeOff { Superstructure.kStowed.schedule() }
+            button(kY).changeOn(Superstructure.kHatchHigh) // .changeOff { Superstructure.kStowed.schedule() }
 
             // Stow (for now like this coz i dont wanna break anything
             button(10).changeOn(Superstructure.kStowed)
