@@ -160,8 +160,8 @@ open class ManualDriveCommand : FalconCommand(DriveSubsystem) {
 //            else Controls.driverFalconXbox.getY(GenericHID.Hand.kLeft).withDeadband(kDeadband)
 
         val rotationSource by lazy {
-            if (Constants.kIsRocketLeague) Controls.driverFalconXbox.getX(GenericHID.Hand.kLeft).withDeadband(kDeadband)
-            else Controls.driverFalconXbox.getX(GenericHID.Hand.kRight).withDeadband(kDeadband)
+            Controls.driverFalconXbox.getX(GenericHID.Hand.kLeft).withDeadband(kDeadband)
+            //else Controls.driverFalconXbox.getX(GenericHID.Hand.kRight).withDeadband(kDeadband)
         }
         val quickTurnSource by lazy {
             if (Constants.kIsRocketLeague) Controls.driverFalconXbox.getRawButton(kA)
