@@ -10,6 +10,7 @@ import frc.robot.subsystems.climb.ClimbSubsystem
 import frc.robot.subsystems.drive.CharacterizationCommand
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.VisionDriveCommand
+import frc.robot.subsystems.intake.HatchStateMachineCommand
 import frc.robot.subsystems.intake.IntakeCargoCommand
 import frc.robot.subsystems.intake.IntakeHatchCommand
 import frc.robot.subsystems.superstructure.* // ktlint-disable no-wildcard-imports
@@ -23,6 +24,7 @@ object Controls : Updatable {
 
     var isClimbing = false
 
+
     private val zero = ZeroSuperStructureRoutine()
 
     val driverControllerLowLevel = XboxController(0)
@@ -33,9 +35,7 @@ object Controls : Updatable {
 //        button(kX).changeOn { isClimbing = false }
 //        button(kA).changeOn(ClimbSubsystem.fullS3ndClimbCommand)
 
-
-
-        button(kX).changeOn(BottomRocketRoutine2()())
+        button(kX).changeOn(IntakeHatchCommand(false)) // Do the intake
 //        button(kX).changeOn(CharacterizationCommand(DriveSubsystem))
 
         // Vision align
@@ -48,9 +48,9 @@ object Controls : Updatable {
 //                button(kBumperRight).change(VisionDriveCommand(true))
 ////                button(kBumperRight).change(ClosedLoopVisionDriveCommand(true))
         // This should shift ....
-        button(kBumperLeft).changeOn { DriveSubsystem.lowGear = true }
-        button(kBumperRight).changeOn { DriveSubsystem.lowGear = false }
-//            } else {
+        button(kBumperLeft).changeOn { DriveSubsystem.lowGear = !DriveSubsystem.lowGear }
+        button(kBumperRight).changeOn(HatchStateMachineCommand())
+    //} else {
 //                triggerAxisButton(GenericHID.Hand.kRight).change(VisionDriveCommand(true))
 ////                triggerAxisButton(GenericHID.Hand.kRight).change(ClosedLoopVisionDriveCommand(true))
 //                button(kBumperLeft).changeOn { DriveSubsystem.lowGear = true }.changeOff { DriveSubsystem.lowGear = false }
@@ -60,15 +60,7 @@ object Controls : Updatable {
             pov(0).changeOn(ClimbSubsystem.hab3ClimbCommand)
         }
         pov(90).changeOn(ClimbSubsystem.hab3prepMove).changeOn{ isClimbing = true }
-    }
 
-//    val auxXbox = XboxController(1)
-//    val auxFalconXbox = auxXbox.mapControls {
-//        button(kY).changeOn(ClimbSubsystem.fullS3ndClimbCommand)
-//    }
-
-    val operatorJoy = Joystick(5)
-    val operatorFalconHID = operatorJoy.mapControls {
 
 //        button(4).changeOn(ClimbSubsystem.fullS3ndClimbCommand)
 
@@ -83,10 +75,10 @@ object Controls : Updatable {
             button(8).changeOn(Superstructure.kCargoShip) // .changeOff { Superstructure.kStowed.schedule() }
 
             // hatch presets
-            button(kA).changeOn(Superstructure.kHatchLow) // .changeOff { Superstructure.kStowed.schedule() }
-            button(kB).changeOn(Superstructure.kHatchMid) // .changeOff { Superstructure.kStowed.schedule() }
-            button(kY).changeOn(Superstructure.kHatchHigh) // .changeOff { Superstructure.kStowed.schedule() }
-
+        // need to make state machine here
+//            button(kA).changeOn(Superstructure.kHatchLow) // .changeOff { Superstructure.kStowed.schedule() }
+//            button(kB).changeOn(Superstructure.kHatchMid) // .changeOff { Superstructure.kStowed.schedule() }
+//            button(kY).changeOn(Superstructure.kHatchHigh) // .changeOff { Superstructure.kStowed.schedule() }
             // Stow (for now like this coz i dont wanna break anything
             button(10).changeOn(Superstructure.kStowed)
 
@@ -110,12 +102,17 @@ object Controls : Updatable {
         }
 
         button(4).changeOn(ClimbSubsystem.prepMove).changeOn { isClimbing = true }
+        greaterThanAxisButton(5, 0.5).changeOn(Superstructure.kCargoHigh)
+        lessThanAxisButton( 5, -0.5).changeOn(Superstructure.kCargoLow)
+        greaterThanAxisButton(4, 0.5).changeOn(Superstructure.kCargoMid)
+        lessThanAxisButton(4, -0.5).changeOn(Superstructure.kCargoShip)
+
 
     }
 
     override fun update() {
         driverFalconXbox.update()
-        operatorFalconHID.update()
+//        operatorFalconHID.update()
 //        auxFalconXbox.update()
     }
 }

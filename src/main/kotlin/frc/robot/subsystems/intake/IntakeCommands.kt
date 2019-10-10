@@ -4,15 +4,36 @@ package frc.robot.subsystems.intake
 
 import edu.wpi.first.wpilibj.frc2.command.InstantCommand
 import frc.robot.Controls
+import frc.robot.Controls.driverFalconXbox
+import frc.robot.subsystems.superstructure.Superstructure
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.mathematics.units.derived.volt
+import org.ghrobotics.lib.wrappers.hid.kA
 import kotlin.math.abs
 
 val closeIntake = InstantCommand(Runnable { Intake.wantsOpen = false })
 val openIntake = InstantCommand(Runnable { Intake.wantsOpen = true })
+
+val aButton = 1
+
+class HatchStateMachineCommand() : FalconCommand() {
+    val possibleHatchStates = arrayOf(Superstructure.kHatchLow, Superstructure.kHatchMid, Superstructure.kHatchHigh)
+    // 0 = lv1, 1=lv2, 2=lv3
+    var currentHatchState = 0
+    override fun initialize() {
+        println("State machine activated")
+    }
+    override fun execute() {
+        if (driverFalconXbox.getRawButton(aButton)()) {
+            // button is pressed
+            currentHatchState = (currentHatchState + 1) % possibleHatchStates.size // increment hatch state
+            possibleHatchStates[currentHatchState].schedule()
+        }
+    }
+}
 
 class IntakeHatchCommand(val releasing: Boolean) : FalconCommand(Intake) {
 
@@ -58,6 +79,7 @@ class IntakeCargoCommand(val releasing: Boolean) : FalconCommand(Intake) {
     }
 }
 
+/*
 class IntakeTeleopCommand : FalconCommand(Intake) {
 
     override fun execute() {
@@ -83,6 +105,7 @@ class IntakeTeleopCommand : FalconCommand(Intake) {
         val hatchSource by lazy { Controls.operatorFalconHID.getRawAxis(1) }
     }
 }
+*/
 
 class IntakeCloseCommand : FalconCommand(Intake) {
     init {
