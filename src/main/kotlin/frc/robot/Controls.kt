@@ -44,15 +44,17 @@ object Controls : Updatable {
 //                            BooleanSupplier { !Superstructure.currentState.isPassedThrough }))
 
             // Shifting
-            if (Constants.kIsRocketLeague) {
-                button(kBumperRight).change(VisionDriveCommand(true))
-//                button(kBumperRight).change(ClosedLoopVisionDriveCommand(true))
-                button(9).changeOn { DriveSubsystem.lowGear = true }.changeOff { DriveSubsystem.lowGear = false }
-            } else {
-                triggerAxisButton(GenericHID.Hand.kRight).change(VisionDriveCommand(true))
-//                triggerAxisButton(GenericHID.Hand.kRight).change(ClosedLoopVisionDriveCommand(true))
-                button(kBumperLeft).changeOn { DriveSubsystem.lowGear = true }.changeOff { DriveSubsystem.lowGear = false }
-            }
+//            if (Constants.kIsRocketLeague) {
+//                button(kBumperRight).change(VisionDriveCommand(true))
+////                button(kBumperRight).change(ClosedLoopVisionDriveCommand(true))
+        // This should shift ....
+        button(kBumperLeft).changeOn { DriveSubsystem.lowGear = true }
+        button(kBumperRight).changeOn { DriveSubsystem.lowGear = false }
+//            } else {
+//                triggerAxisButton(GenericHID.Hand.kRight).change(VisionDriveCommand(true))
+////                triggerAxisButton(GenericHID.Hand.kRight).change(ClosedLoopVisionDriveCommand(true))
+//                button(kBumperLeft).changeOn { DriveSubsystem.lowGear = true }.changeOff { DriveSubsystem.lowGear = false }
+//            }
 //            button(kB).changeOn(ClimbSubsystem.prepMove)
         state({ isClimbing }) {
             pov(0).changeOn(ClimbSubsystem.hab3ClimbCommand)
