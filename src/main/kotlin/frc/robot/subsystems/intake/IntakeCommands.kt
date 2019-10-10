@@ -21,6 +21,8 @@ val aButton = 1
 
 class HatchStateMachineCommand() : FalconCommand() {
     val possibleHatchStates = arrayOf(Superstructure.kHatchLow, Superstructure.kHatchMid, Superstructure.kHatchHigh)
+        @Synchronized get
+    
     // 0 = lv1, 1=lv2, 2=lv3
     var currentHatchState = 0
     override fun initialize() {
