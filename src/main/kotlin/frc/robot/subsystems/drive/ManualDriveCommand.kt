@@ -140,19 +140,20 @@ open class ManualDriveCommand : FalconCommand(DriveSubsystem) {
         private const val kQuickStopAlpha = TankDriveSubsystem.kQuickStopAlpha
         const val kDeadband = 0.05
         val speedSource: () -> Double by lazy {
-            if (Constants.kIsRocketLeague) {
-                return@lazy { val toRet = Controls.driverControllerLowLevel.getTriggerAxis(GenericHID.Hand.kRight) - Controls
-                        .driverControllerLowLevel.getTriggerAxis(GenericHID.Hand.kLeft)
+            //if (Constants.kIsRocketLeague) {
+            // We are only using rocket league
+            return@lazy { val toRet = Controls.driverControllerLowLevel.getTriggerAxis(GenericHID.Hand.kRight) - Controls
+                    .driverControllerLowLevel.getTriggerAxis(GenericHID.Hand.kLeft)
 //                    println("speed $toRet")
-                    val compensated = toRet * -1.0
-                    val deadbanded = ((compensated.absoluteValue - kDeadband / 1.8) / (1.0 - kDeadband / 1.8)) * compensated.sign
+                val compensated = toRet * -1.0
+                val deadbanded = ((compensated.absoluteValue - kDeadband / 1.8) / (1.0 - kDeadband / 1.8)) * compensated.sign
 
-                    // throttle curve should be between [-1. 1] or so.
-                    kisscalc(deadbanded, 0.77, 0.0, 0.00116)
+                // throttle curve should be between [-1. 1] or so.
+                kisscalc(deadbanded, 0.77, 0.0, 0.00116)
                 }
-            } else {
-                return@lazy Controls.driverFalconXbox.getY(GenericHID.Hand.kLeft).withDeadband(kDeadband)
-            }
+//            } else {
+//                return@lazy Controls.driverFalconXbox.getY(GenericHID.Hand.kLeft).withDeadband(kDeadband)
+//            }
         }
 //            if(Constants.kIsRocketLeague) { { Controls.driverControllerLowLevel.getTriggerAxis(GenericHID.Hand.kRight)
 //                - Controls.driverControllerLowLevel.getTriggerAxis(GenericHID.Hand.kLeft) } }
