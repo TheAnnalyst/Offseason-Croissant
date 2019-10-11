@@ -3,6 +3,7 @@
 package frc.robot.subsystems.intake
 
 import edu.wpi.first.wpilibj.frc2.command.InstantCommand
+import edu.wpi.first.wpilibj.frc2.command.SendableCommandBase
 import frc.robot.Controls
 import frc.robot.Controls.driverFalconXbox
 import frc.robot.subsystems.superstructure.Superstructure
@@ -10,6 +11,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.ghrobotics.lib.commands.FalconCommand
+import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.units.derived.volt
 import org.ghrobotics.lib.wrappers.hid.kA
 import kotlin.math.abs
@@ -20,20 +22,51 @@ val openIntake = InstantCommand(Runnable { Intake.wantsOpen = true })
 val aButton = 1
 
 class HatchStateMachineCommand() : FalconCommand() {
-    val possibleHatchStates = arrayOf(Superstructure.kHatchLow, Superstructure.kHatchMid, Superstructure.kHatchHigh)
+//    val possibleHatchStates = arrayOf(Superstructure.kHatchLow, Superstructure.kHatchMid, Superstructure.kHatchHigh)
+//        @Synchronized get
+
+    val possibleHatchStates = hashMapOf(0 to Superstructure.kHatchLow, 1 to Superstructure.kHatchMid, 2 to Superstructure.kHatchHigh)
         @Synchronized get
-    
+
+    var currentCommand: SendableCommandBase = sequential {  }
+    var wasInitilized = false
+
+
+    var wasPressed = false
+    val source by lazy { driverFalconXbox.getRawButton(aButton) }
+
     // 0 = lv1, 1=lv2, 2=lv3
     var currentHatchState = 0
     override fun initialize() {
         println("State machine activated")
     }
     override fun execute() {
-        if (driverFalconXbox.getRawButton(aButton)()) {
+        if (source() && !wasPressed) {
             // button is pressed
-            currentHatchState = (currentHatchState + 1) % possibleHatchStates.size // increment hatch state
-            possibleHatchStates[currentHatchState].schedule()
+//            currentHatchState = (currentHatchState + 1) % (possibleHatchStates.size - 1) // increment hatch state
+            currentHatchState = if(currentHatchState == (possibleHatchStates.size - 1)) 0 else currentHatchState + 1
+            println("currentHatchState: ${currentHatchState}")
+//            println("possibleHatchStates.size: ${possibleHatchStates.size}")
+            currentCommand.end(true)
+            currentCommand = when (currentHatchState) {
+                0 -> Superstructure.kHatchLow
+                1 -> Superstructure.kHatchMid
+                2 -> Superstructure.kHatchHigh
+                else -> sequential {  }
+            }
+
+            currentCommand.initialize()
+
+            if(currentCommand.isFinished) currentCommand = sequential {}
+
+            wasPressed = true
+        } else if(!source()) {
+            wasPressed = false
         }
+
+//        try {
+            currentCommand.execute()
+//        } catch(E: Exception) { E.printStackTrace()}
     }
 }
 
@@ -83,6 +116,7 @@ class IntakeCargoCommand(val releasing: Boolean) : FalconCommand(Intake) {
 
 /*
 class IntakeTeleopCommand : FalconCommand(Intake) {
+
 
     override fun execute() {
         val cargoSpeed = -cargoSource()
