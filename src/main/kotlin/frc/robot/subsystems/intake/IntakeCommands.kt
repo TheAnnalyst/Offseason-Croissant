@@ -55,17 +55,18 @@ class HatchStateMachineCommand() : FalconCommand() {
                 else -> sequential {  }
             }
 
-            currentCommand.initialize()
+            currentCommand.schedule()
 
-            if(currentCommand.isFinished) currentCommand = sequential {}
 
             wasPressed = true
         } else if(!source()) {
             wasPressed = false
         }
 
+//        if(currentCommand.isFinished) currentCommand = sequential {}
+
 //        try {
-            currentCommand.execute()
+//            currentCommand.execute()
 //        } catch(E: Exception) { E.printStackTrace()}
     }
 }

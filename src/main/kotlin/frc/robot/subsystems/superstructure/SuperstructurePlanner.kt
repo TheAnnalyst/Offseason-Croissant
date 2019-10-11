@@ -228,7 +228,7 @@ object SuperstructurePlanner {
             SuperstructureState(elevator, proximal, wrist))
 
     fun everythingMoveTo(goalState: SuperstructureState): SendableCommandBase =
-            object : FalconCommand(Superstructure, Proximal, Wrist, Elevator) {
+            object : FalconCommand(Superstructure/*, Proximal, Wrist, Elevator*/) {
                 // This whole {} thing is a Supplier<Command> that will return a Command that moves everything safely (hopefully)
 
                 override fun getName() = "move to ${goalState.asString()}"
@@ -238,16 +238,16 @@ object SuperstructurePlanner {
 
                 override fun initialize() {
                     path = planOldPath(currentState = Superstructure.currentState, goalState = goalState)
-                    path!!.initialize()
+                    path!!.schedule()
                     pathStarted = true
                 }
 
                 override fun execute() {
-                    path!!.execute()
+
                 }
 
                 override fun end(interrupted: Boolean) {
-                    path?.end(interrupted)
+                    path?.cancel()
                     path = null
                     pathStarted = false
                 }
