@@ -94,7 +94,7 @@ class BottomRocketRoutine2 : AutoRoutine() {
             val spline4 = super.followVisionAssistedTrajectory(
                     path4,
                     Autonomous.isStartingOnLeft,
-                    7.feet, false
+                    6.feet, false
             )
 
             // Part 2: Place hatch and go to loading station.

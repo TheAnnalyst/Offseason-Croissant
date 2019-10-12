@@ -252,7 +252,7 @@ object TrajectoryFactory {
             listOf(
                     Pose2d(24.467.feet, 3.018.feet, (160).degree).asWaypoint(),
                     Pose2d(19.216.feet, 5.345.feet, 185.degree).asWaypoint(),
-                    Pose2d(8.318.feet, 3.157.feet, 180.degree).asWaypoint(),
+                    Pose2d(8.318.feet, 2.65.feet, 180.degree).asWaypoint(),
                     loadingStationUnPassedthroughAdjusted
             ),
             getConstraints(false, loadingStationUnPassedthroughAdjusted), 10.feet.velocity, kMaxAcceleration * 1.75, 10.5.volt
