@@ -1,7 +1,7 @@
 package org.team5940.pantry.lib
 
 import edu.wpi.first.wpilibj.Timer
-import edu.wpi.first.wpilibj.frc2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.superstructure.* // ktlint-disable no-wildcard-imports
@@ -28,8 +28,8 @@ abstract class FishyRobot : FalconTimedRobot() {
 
     val job = arrayListOf<Job>()
 
-    var lastRobotMode = Mode.DISABLED
-        private set
+//    var lastRobotMode = Mode.DISABLED
+//        private set
 
     override fun robotInit() {
 
@@ -54,17 +54,14 @@ abstract class FishyRobot : FalconTimedRobot() {
     }
 
     override fun disabledInit() {
-        lastRobotMode = Mode.DISABLED
         super.disabledInit()
     }
 
     override fun autonomousInit() {
-        lastRobotMode = Mode.AUTONOMOUS
         super.autonomousInit()
     }
 
     override fun teleopInit() {
-        lastRobotMode = Mode.TELEOPERATED
         super.teleopInit()
     }
 

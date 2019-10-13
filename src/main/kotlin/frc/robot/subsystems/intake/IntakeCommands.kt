@@ -2,8 +2,8 @@
 
 package frc.robot.subsystems.intake
 
-import edu.wpi.first.wpilibj.frc2.command.InstantCommand
-import edu.wpi.first.wpilibj.frc2.command.SendableCommandBase
+import edu.wpi.first.wpilibj2.command.CommandBase
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import frc.robot.Controls
 import frc.robot.Controls.driverFalconXbox
 import frc.robot.subsystems.superstructure.Superstructure
@@ -28,7 +28,7 @@ class HatchStateMachineCommand() : FalconCommand() {
     val possibleHatchStates = hashMapOf(0 to Superstructure.kHatchLow, 1 to Superstructure.kHatchMid, 2 to Superstructure.kHatchHigh)
         @Synchronized get
 
-    var currentCommand: SendableCommandBase = sequential {  }
+    var currentCommand: CommandBase = CommandBase sequential {  }
     var wasInitilized = false
 
 
