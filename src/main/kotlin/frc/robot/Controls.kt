@@ -99,13 +99,18 @@ object Controls : Updatable {
             button(12).changeOn(ClimbSubsystem.fullS3ndClimbCommand)
         }
 
-        button(kStickRight).changeOn(IntakeCargoCommand(true)).changeOn {  }
-        greaterThanAxisButton(5, 0.5).changeOn(Superstructure.kCargoHigh)
-        lessThanAxisButton( 5, -0.5).changeOn(Superstructure.kCargoLow)
-        greaterThanAxisButton(4, 0.5).changeOn(Superstructure.kCargoMid)
-        lessThanAxisButton(4, -0.5).changeOn(Superstructure.kCargoShip)
+        button(kStickRight).change(IntakeCargoCommand(false))
+        button(kX).change(IntakeCargoCommand(true))
+
+        greaterThanAxisButton(5).changeOn(Superstructure.kCargoHigh)
+        lessThanAxisButton( 5).changeOn(Superstructure.kCargoLow)
+        greaterThanAxisButton(4).changeOn(Superstructure.kCargoMid)
+        lessThanAxisButton(4).changeOn(Superstructure.kCargoShip)
+
 
     }
+
+
 
     override fun update() {
         driverFalconXbox.update()

@@ -89,6 +89,8 @@ class IntakeHatchCommand(val releasing: Boolean) : FalconCommand(Intake) {
 
 class IntakeCargoCommand(val releasing: Boolean) : FalconCommand(Intake) {
 
+
+
 //    var wasOpen: Boolean = false
 
     override fun initialize() {
