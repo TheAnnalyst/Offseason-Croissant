@@ -4,8 +4,8 @@ import asSource
 import com.kauailabs.navx.frc.AHRS
 import com.team254.lib.physics.DifferentialDrive
 import edu.wpi.first.wpilibj.SPI
-import edu.wpi.first.wpilibj.frc2.command.InstantCommand
-import edu.wpi.first.wpilibj.frc2.command.WaitUntilCommand
+import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import frc.robot.Constants
 import frc.robot.Constants.DriveConstants.kDriveLengthModel
 import frc.robot.Ports.DrivePorts.LEFT_PORTS
@@ -16,12 +16,8 @@ import io.github.oblarg.oblog.Loggable
 import org.ghrobotics.lib.localization.TankEncoderLocalization
 import org.ghrobotics.lib.mathematics.twodim.control.RamseteTracker
 import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
-import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2dWithCurvature
 import org.ghrobotics.lib.mathematics.twodim.geometry.Rectangle2d
 import org.ghrobotics.lib.mathematics.twodim.geometry.Translation2d
-import org.ghrobotics.lib.mathematics.twodim.trajectory.types.TimedEntry
-import org.ghrobotics.lib.mathematics.twodim.trajectory.types.Trajectory
-import org.ghrobotics.lib.mathematics.twodim.trajectory.types.mirror
 import org.ghrobotics.lib.mathematics.units.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.mathematics.units.derived.degree
 import org.ghrobotics.lib.mathematics.units.derived.velocity
@@ -29,9 +25,6 @@ import org.ghrobotics.lib.mathematics.units.derived.volt
 import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.ctre.FalconSRX
 import org.ghrobotics.lib.subsystems.EmergencyHandleable
-import org.ghrobotics.lib.utils.BooleanSource
-import org.ghrobotics.lib.utils.Source
-import org.ghrobotics.lib.utils.map
 import org.ghrobotics.lib.wrappers.FalconDoubleSolenoid
 import org.ghrobotics.lib.wrappers.FalconSolenoid
 import org.team5940.pantry.lib.ConcurrentlyUpdatingComponent
@@ -64,9 +57,9 @@ object DriveSubsystem : TankDriveSubsystem(), EmergencyHandleable, ConcurrentlyU
 //            followers.forEach { configCurrentLimit(true, FalconSRX.CurrentLimitConfig(50.amp, 1.second, 38.amp)) }
 
             // LQR gains
-//            if (lowGear) setClosedLoopGains(0.667, 0.0) else setClosedLoopGains(0.92, 8.0)
+            if (lowGear) setClosedLoopGains(0.667, 0.0) else setClosedLoopGains(1.0, 0.0)
             // old gains
-            if (lowGear) setClosedLoopGains(0.45, 0.45*20.0) else setClosedLoopGains(1.0, 8.0)
+//            if (lowGear) setClosedLoopGains(0.45, 0.45*20.0) else setClosedLoopGains(1.0, 0.0)
         }
     }
 
@@ -90,9 +83,9 @@ object DriveSubsystem : TankDriveSubsystem(), EmergencyHandleable, ConcurrentlyU
 
         override fun setClosedLoopGains() {
             // LQR gains
-//            if (lowGear) setClosedLoopGains(0.667, 0.0) else setClosedLoopGains(0.92, 8.0)
+            if (lowGear) setClosedLoopGains(0.667, 0.0) else setClosedLoopGains(1.0, 0.0)
             // Old gains
-            if (lowGear) setClosedLoopGains(0.45, 0.45*20.0) else setClosedLoopGains(1.0, 8.0)
+//            if (lowGear) setClosedLoopGains(0.45, 0.45*20.0) else setClosedLoopGains(1.0, 0.0)
         }
     }
 
@@ -101,9 +94,13 @@ object DriveSubsystem : TankDriveSubsystem(), EmergencyHandleable, ConcurrentlyU
         super.setNeutral()
     }
 
-    override fun activateEmergency() = run { zeroOutputs(); leftMotor.zeroClosedLoopGains(); rightMotor.zeroClosedLoopGains() }
+    override fun activateEmergency() { zeroOutputs(); leftMotor.zeroClosedLoopGains(); rightMotor.zeroClosedLoopGains()
+        defaultCommand = ManualDriveCommand()
+    }
 
-    override fun recoverFromEmergency() = run { leftMotor.setClosedLoopGains(); rightMotor.setClosedLoopGains() }
+    override fun recoverFromEmergency() { leftMotor.setClosedLoopGains(); rightMotor.setClosedLoopGains()
+        defaultCommand = ClosedLoopChezyDriveCommand()
+    }
     fun notWithinRegion(region: Rectangle2d) =
             WaitUntilCommand { !region.contains(robotPosition.translation) }
 

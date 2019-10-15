@@ -1,20 +1,27 @@
 package frc.robot.auto.routines
 
-import edu.wpi.first.wpilibj.frc2.command.InstantCommand
-import edu.wpi.first.wpilibj.frc2.command.PrintCommand
-import edu.wpi.first.wpilibj.frc2.command.WaitCommand
+import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.PrintCommand
+import edu.wpi.first.wpilibj2.command.RunCommand
+import edu.wpi.first.wpilibj2.command.WaitCommand
 import frc.robot.auto.Autonomous
 import frc.robot.auto.paths.TrajectoryFactory
 import frc.robot.auto.paths.TrajectoryWaypoints
 import frc.robot.subsystems.drive.DriveSubsystem
+import frc.robot.subsystems.drive.TurnInPlaceCommand
 import frc.robot.subsystems.intake.Intake
-import frc.robot.subsystems.intake.IntakeCloseCommand
 import frc.robot.subsystems.intake.IntakeHatchCommand
 import frc.robot.subsystems.superstructure.Superstructure
+import frc.robot.vision.TargetTracker
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.twodim.trajectory.types.duration
 import org.ghrobotics.lib.mathematics.units.* // ktlint-disable no-wildcard-imports
 import org.ghrobotics.lib.commands.* // ktlint-disable no-wildcard-imports
+import org.ghrobotics.lib.mathematics.twodim.control.TrajectoryTracker
+import org.ghrobotics.lib.mathematics.twodim.geometry.Pose2d
+import org.ghrobotics.lib.mathematics.twodim.geometry.Rotation2d
+import org.ghrobotics.lib.mathematics.units.derived.degree
+import org.ghrobotics.lib.mathematics.units.derived.toRotation2d
 import org.ghrobotics.lib.mathematics.units.derived.volt
 
 class BottomRocketRoutine2 : AutoRoutine() {
@@ -28,6 +35,7 @@ class BottomRocketRoutine2 : AutoRoutine() {
 
     // Third path goes to the near side of the rocket
     private val path5 = TrajectoryFactory.loadingStationReversedToRocketNPrep
+    private val path6 = TrajectoryFactory.rocketNPrepToRocketN
 
     override val duration: SIUnit<Second>
         get() = path4.duration + path5.duration + path1.duration + path2.duration
@@ -50,12 +58,24 @@ class BottomRocketRoutine2 : AutoRoutine() {
                 }).beforeStarting { Intake.hatchMotorOutput = 6.volt }.whenFinished { Intake.hatchMotorOutput = 0.volt }
             }
 
-            +PrintCommand("path2")
+            +TurnInPlaceCommand {
+                Pose2d().mirror
+//                val goal = TrajectoryWaypoints.kRocketF.translation.let { if(Autonomous.isStartingOnLeft()) it.mirror else it }
+                val goalTarget = TargetTracker.getBestTarget(true)
+                if(goalTarget != null) {
+                    val goal = goalTarget.averagedPose2d.translation
+                    val error = (goal - DriveSubsystem.robotPosition.translation)
+                    Rotation2d(error.x.meter, error.y.meter, true)
+                } else {
+                    -151.degree.toRotation2d()
+                }
+//                -151.degree.toRotation2d()
+            }
 
             +super.followVisionAssistedTrajectory(
                     path2,
                     Autonomous.isStartingOnLeft,
-                    4.feet,
+                    10.feet,
                     true
             )
 
@@ -74,7 +94,7 @@ class BottomRocketRoutine2 : AutoRoutine() {
             val spline4 = super.followVisionAssistedTrajectory(
                     path4,
                     Autonomous.isStartingOnLeft,
-                    4.feet, false
+                    6.feet, false
             )
 
             // Part 2: Place hatch and go to loading station.
@@ -106,34 +126,30 @@ class BottomRocketRoutine2 : AutoRoutine() {
 
             // Part 3: Pickup hatch and go to the near side of the rocket.
             +parallel {
+                val path = DriveSubsystem.followTrajectory(path5, Autonomous.isStartingOnLeft)
+                +path
                 // Make sure the intake is holding the hatch panel.
-                +IntakeHatchCommand(false).withTimeout(3.0.second)
+                +IntakeHatchCommand(false).withTimeout(4.0.second).withExit { path.isFinished }
                 // Follow the trajectory with vision correction to the near side of the rocket.
-                +super.followVisionAssistedTrajectory(
-                        path5,
-                        Autonomous.isStartingOnLeft,
-                        6.feet, true
-                )
-                +WaitCommand(1.0)
-                +Superstructure.kStowed
-                // Take the superstructure to scoring height.
-//                +Superstructure.kHatchLow.withTimeout(4.second)
+//                +WaitCommand(0.5)
+//                +Superstructure.kStowed
             }
+            // turn to face the goal
+            +TurnInPlaceCommand {
+//                val goal = TrajectoryWaypoints.kRocketN.translation.let { if(Autonomous.isStartingOnLeft()) it.mirror else it }
+//                val error = (goal - DriveSubsystem.robotPosition.translation)
+//                Rotation2d(error.x.meter, error.y.meter, true)
+                (-28.75).degree.toRotation2d()
+            }
+            +followVisionAssistedTrajectory(
+                    path6,
+                    Autonomous.isStartingOnLeft,
+                    4.feet
+            )
 
-            // Part 4: Score the hatch and go to the loading station for the end of the sandstorm period.
             +parallel {
-                // Score hatch.
-                // Follow the trajectory to the loading station.
-                +DriveSubsystem.followTrajectory(
-                        TrajectoryFactory.rocketNToLoadingStation,
-                        Autonomous.isStartingOnLeft
-                )
-                // Take the superstructure to a position to pick up the next hatch.
-                +sequential {
-                    //                    +IntakeHatchCommand(releasing = true).withTimeout(0.5.second)
-//                    +IntakeCloseCommand()
-//                    +Superstructure.kHatchLow
-                }
+                +IntakeHatchCommand(true).withTimeout(1.0)
+                +RunCommand(Runnable{ DriveSubsystem.tankDrive(-0.3, -0.3) }).withTimeout(1.0)
             }
         }
 }

@@ -3,12 +3,11 @@ package frc.robot
 import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.XboxController
-import edu.wpi.first.wpilibj.frc2.command.* // ktlint-disable no-wildcard-imports
+import edu.wpi.first.wpilibj2.command.* // ktlint-disable no-wildcard-imports
 import frc.robot.auto.routines.BottomRocketRoutine2
-import frc.robot.auto.routines.TestRoutine
 import frc.robot.subsystems.climb.ClimbSubsystem
-import frc.robot.subsystems.drive.CharacterizationCommand
 import frc.robot.subsystems.drive.DriveSubsystem
+import frc.robot.subsystems.drive.TurnInPlaceCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.HatchStateMachineCommand
 import frc.robot.subsystems.intake.IntakeCargoCommand
@@ -31,9 +30,8 @@ object Controls : Updatable {
     val driverFalconXbox = driverControllerLowLevel.mapControls {
         registerEmergencyMode()
 
-//        button(kB).changeOn { isClimbing = true }
-//        button(kX).changeOn { isClimbing = false }
-//        button(kA).changeOn(ClimbSubsystem.fullS3ndClimbCommand)
+        button(kY).changeOn(BottomRocketRoutine2()())
+//        button(kA).change(TurnInPlaceCommand(90.degree))
 
         button(kX).changeOn(IntakeHatchCommand(false)) // Do the intake
 //        button(kX).changeOn(CharacterizationCommand(DriveSubsystem))
@@ -63,7 +61,6 @@ object Controls : Updatable {
 
 
 //        button(4).changeOn(ClimbSubsystem.fullS3ndClimbCommand)
-
 
             // climbing
 
@@ -106,7 +103,6 @@ object Controls : Updatable {
         lessThanAxisButton( 5, -0.5).changeOn(Superstructure.kCargoLow)
         greaterThanAxisButton(4, 0.5).changeOn(Superstructure.kCargoMid)
         lessThanAxisButton(4, -0.5).changeOn(Superstructure.kCargoShip)
-
 
     }
 

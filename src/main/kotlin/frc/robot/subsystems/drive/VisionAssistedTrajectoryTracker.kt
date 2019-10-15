@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drive
 
-import edu.wpi.first.wpilibj.Timer
 import frc.robot.Constants
 import frc.robot.Network
 import frc.robot.subsystems.superstructure.Length
@@ -27,9 +26,9 @@ import org.ghrobotics.lib.utils.Source
  * @param trajectorySource Source that contains the trajectory to follow.
  */
 class VisionAssistedTrajectoryTracker(
-        val trajectorySource: Source<Trajectory<SIUnit<Second>, TimedEntry<Pose2dWithCurvature>>>,
-        private val radiusFromEnd: Length,
-        private val useAbsoluteVision: Boolean = false
+    val trajectorySource: Source<Trajectory<SIUnit<Second>, TimedEntry<Pose2dWithCurvature>>>,
+    private val radiusFromEnd: Length,
+    private val useAbsoluteVision: Boolean = false
 ) : FalconCommand(DriveSubsystem) {
 
 //    private var visionFinished = false
@@ -39,7 +38,7 @@ class VisionAssistedTrajectoryTracker(
     @Suppress("LateinitUsage")
     private lateinit var trajectory: Trajectory<SIUnit<Second>, TimedEntry<Pose2dWithCurvature>>
 
-    override fun isFinished() = DriveSubsystem.trajectoryTracker.isFinished//visionFinished
+    override fun isFinished() = DriveSubsystem.trajectoryTracker.isFinished // visionFinished
 
     /**
      * Reset the trajectory follower with the new trajectory.
@@ -138,8 +137,8 @@ class VisionAssistedTrajectoryTracker(
     }
 
     companion object {
-        const val kCorrectionKp = 5.5 * 1.5
-        const val kCorrectionKd = 0.0
+        const val kCorrectionKp = 0.8 * 1.2 * 1.5//5.5 * 2.0
+        const val kCorrectionKd = 8.0//5.0
         const val kLinearKp = 0.6
         val kMaxLinearVelocityVision = 2.5.feet.velocity
         var visionActive = false

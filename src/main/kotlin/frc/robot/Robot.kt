@@ -2,7 +2,7 @@
 package frc.robot
 
 import edu.wpi.first.networktables.NetworkTableInstance
-import edu.wpi.first.wpilibj.frc2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.auto.Autonomous
 import frc.robot.subsystems.climb.ClimbSubsystem
@@ -18,7 +18,6 @@ import frc.robot.vision.TargetTracker
 import frc.robot.vision.VisionProcessing
 import frc.robot.subsystems.superstructure.Wrist
 import org.team5940.pantry.lib.FishyRobot
-import frc.robot.auto.routines.BottomRocketRoutine2
 
 object Robot : FishyRobot() {
 
@@ -38,12 +37,11 @@ object Robot : FishyRobot() {
         LimeLightManager
         VisionProcessing
         +Controls
-//        +Autonomous
+        +Autonomous
         +LEDs
 
         SmartDashboard.putData(CommandScheduler.getInstance())
         Superstructure.zero.schedule()
-//        SmartDashboard.putData("bottomRocket", BottomRocketRoutine2().routine)
 
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("stream").setNumber(2)
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1)
@@ -62,11 +60,9 @@ object Robot : FishyRobot() {
     }
 
     override fun autonomousInit() {
-//        Autonomous.s3nd()
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0)
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0)
         super.autonomousInit()
-        BottomRocketRoutine2()().schedule()
     }
 
     override fun teleopInit() {
