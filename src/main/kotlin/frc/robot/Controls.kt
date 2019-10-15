@@ -33,8 +33,8 @@ object Controls : Updatable {
 
 //        button(kA).change(TurnInPlaceCommand(90.degree))
 
-        button(kB).changeOn(IntakeHatchCommand(false))
-        button(kY).changeOn(IntakeHatchCommand(true))
+        button(kB).change(IntakeHatchCommand(false))
+        button(kY).change(IntakeHatchCommand(true))
 //        button(kX).changeOn(CharacterizationCommand(DriveSubsystem))
 
         // Vision align
