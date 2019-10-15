@@ -28,7 +28,7 @@ class HatchStateMachineCommand() : FalconCommand() {
     val possibleHatchStates = hashMapOf(0 to Superstructure.kHatchLow, 1 to Superstructure.kHatchMid, 2 to Superstructure.kHatchHigh)
         @Synchronized get
 
-    var currentCommand: CommandBase = CommandBase sequential {  }
+    var currentCommand: CommandBase =  sequential {  }
     var wasInitilized = false
 
 

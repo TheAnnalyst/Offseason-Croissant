@@ -10,6 +10,7 @@ import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.TurnInPlaceCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 import frc.robot.subsystems.intake.HatchStateMachineCommand
+import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.intake.IntakeCargoCommand
 import frc.robot.subsystems.intake.IntakeHatchCommand
 import frc.robot.subsystems.superstructure.* // ktlint-disable no-wildcard-imports
@@ -98,7 +99,7 @@ object Controls : Updatable {
             button(12).changeOn(ClimbSubsystem.fullS3ndClimbCommand)
         }
 
-        button(4).changeOn(ClimbSubsystem.prepMove).changeOn { isClimbing = true }
+        button(kStickRight).changeOn(IntakeCargoCommand(true)).changeOn {  }
         greaterThanAxisButton(5, 0.5).changeOn(Superstructure.kCargoHigh)
         lessThanAxisButton( 5, -0.5).changeOn(Superstructure.kCargoLow)
         greaterThanAxisButton(4, 0.5).changeOn(Superstructure.kCargoMid)
