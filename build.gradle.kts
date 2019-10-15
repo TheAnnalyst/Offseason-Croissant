@@ -59,7 +59,7 @@ dependencies {
 
 //    compile("com.github.5190GreenHopeRobotics:FalconLibrary:c1ba9286f9")
 
-    compile("com.github.mcm001:falconlibrary:bccc56aa04")
+    compile("com.github.mcm001:falconlibrary:d09b90b674")
 
 
     compile("com.fazecast:jSerialComm:2.4.1") // jserialcomm for jevois

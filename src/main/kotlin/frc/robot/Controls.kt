@@ -31,10 +31,10 @@ object Controls : Updatable {
     val driverFalconXbox = driverControllerLowLevel.mapControls {
         registerEmergencyMode()
 
-        button(kY).changeOn(BottomRocketRoutine2()())
 //        button(kA).change(TurnInPlaceCommand(90.degree))
 
-        button(kX).changeOn(IntakeHatchCommand(false)) // Do the intake
+        button(kB).changeOn(IntakeHatchCommand(false))
+        button(kY).changeOn(IntakeHatchCommand(true))
 //        button(kX).changeOn(CharacterizationCommand(DriveSubsystem))
 
         // Vision align
