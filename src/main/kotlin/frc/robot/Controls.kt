@@ -9,7 +9,7 @@ import frc.robot.subsystems.climb.ClimbSubsystem
 import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.TurnInPlaceCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
-import frc.robot.subsystems.intake.HatchStateMachineCommand
+//import frc.robot.subsystems.intake.HatchStateMachineCommand
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.intake.IntakeCargoCommand
 import frc.robot.subsystems.intake.IntakeHatchCommand
@@ -48,7 +48,7 @@ object Controls : Updatable {
 ////                button(kBumperRight).change(ClosedLoopVisionDriveCommand(true))
         // This should shift ....
         button(kBumperLeft).changeOn { DriveSubsystem.lowGear = !DriveSubsystem.lowGear }
-        button(kBumperRight).changeOn(HatchStateMachineCommand())
+        //button(kBumperRight).changeOn(HatchStateMachineCommand())
     //} else {
 //                triggerAxisButton(GenericHID.Hand.kRight).change(VisionDriveCommand(true))
 ////                triggerAxisButton(GenericHID.Hand.kRight).change(ClosedLoopVisionDriveCommand(true))
@@ -67,21 +67,21 @@ object Controls : Updatable {
 
             // cargo presets
 //            button(12).changeOn(Superstructure.kCargoIntake.andThen { Intake.wantsOpen = true }) // .changeOff { Superstructure.kStowed.schedule() }
-            button(7).changeOn(Superstructure.kCargoLow) // .changeOff { Superstructure.kStowed.schedule() }
-            button(6).changeOn(Superstructure.kCargoMid) // .changeOff { Superstructure.kStowed.schedule() }
-            button(5).changeOn(Superstructure.kCargoHigh) // .changeOff { Superstructure.kStowed.schedule() }
-            button(8).changeOn(Superstructure.kCargoShip) // .changeOff { Superstructure.kStowed.schedule() }
+            //button(7).changeOn(Superstructure.kCargoLow) // .changeOff { Superstructure.kStowed.schedule() }
+            //button(6).changeOn(Superstructure.kCargoMid) // .changeOff { Superstructure.kStowed.schedule() }
+          // button(5).changeOn(Superstructure.kCargoHigh) // .changeOff { Superstructure.kStowed.schedule() }
+            //button(8).changeOn(Superstructure.kCargoShip) // .changeOff { Superstructure.kStowed.schedule() }
 
             // hatch presets
         // need to make state machine here
-//            button(kA).changeOn(Superstructure.kHatchLow) // .changeOff { Superstructure.kStowed.schedule() }
-//            button(kB).changeOn(Superstructure.kHatchMid) // .changeOff { Superstructure.kStowed.schedule() }
-//            button(kY).changeOn(Superstructure.kHatchHigh) // .changeOff { Superstructure.kStowed.schedule() }
+            button(kA).changeOn(Superstructure.kHatchLow) // .changeOff { Superstructure.kStowed.schedule() }
+           button(kB).changeOn(Superstructure.kHatchMid) // .changeOff { Superstructure.kStowed.schedule() }
+           button(kY).changeOn(Superstructure.kHatchHigh) // .changeOff { Superstructure.kStowed.schedule() }
             // Stow (for now like this coz i dont wanna break anything
-            button(10).changeOn(Superstructure.kStowed)
+            //button(10).changeOn(Superstructure.kStowed)
 
-            button(9).changeOn(ClosedLoopElevatorMove { Elevator.currentState.position + 1.inch })
-            button(11).changeOn(ClosedLoopElevatorMove { Elevator.currentState.position - 1.inch })
+            //button(9).changeOn(ClosedLoopElevatorMove { Elevator.currentState.position + 1.inch })
+            //button(11).changeOn(ClosedLoopElevatorMove { Elevator.currentState.position - 1.inch })
 
             // that one passthrough preset that doesnt snap back to normal
 //            button(4).changeOn(Superstructure.kBackHatchFromLoadingStation)
@@ -93,17 +93,17 @@ object Controls : Updatable {
             // cargo -- intake is a bit tricky, it'll go to the intake preset automatically
             // the lessThanAxisButton represents "intaking", and the greaterThanAxisButton represents "outtaking"
             val cargoCommand = sequential { +PrintCommand("running cargoCommand"); +Superstructure.kCargoIntake; +IntakeCargoCommand(releasing = false) }
-            lessThanAxisButton(0).changeOff { (sequential { +ClosedLoopWristMove(40.degree) ; +Superstructure.kStowed; }).schedule() }.change(cargoCommand)
-            greaterThanAxisButton(0).changeOff { }.change(IntakeCargoCommand(true))
+            //button(kStickRight).changeOff { (sequential { +ClosedLoopWristMove(40.degree) ; +Superstructure.kStowed; }).schedule() }.change(cargoCommand)
+            button(kX).changeOff { }.change(IntakeCargoCommand(true))
         state({ isClimbing }) {
-            button(12).changeOn(ClimbSubsystem.fullS3ndClimbCommand)
+           // button(12).changeOn(ClimbSubsystem.fullS3ndClimbCommand)
         }
 
         button(kStickRight).change(IntakeCargoCommand(false))
-        button(kX).change(IntakeCargoCommand(true))
+        //button(kX).change(IntakeCargoCommand(true))
 
         greaterThanAxisButton(5).changeOn(Superstructure.kCargoHigh)
-        lessThanAxisButton( 5).changeOn(Superstructure.kCargoLow)
+       lessThanAxisButton( 5).changeOn(Superstructure.kCargoLow)
         greaterThanAxisButton(4).changeOn(Superstructure.kCargoMid)
         lessThanAxisButton(4).changeOn(Superstructure.kCargoShip)
 

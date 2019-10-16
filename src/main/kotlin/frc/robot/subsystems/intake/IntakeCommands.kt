@@ -21,7 +21,7 @@ val openIntake = InstantCommand(Runnable { Intake.wantsOpen = true })
 
 val aButton = 1
 
-class HatchStateMachineCommand() : FalconCommand() {
+/*class HatchStateMachineCommand() : FalconCommand() {
 //    val possibleHatchStates = arrayOf(Superstructure.kHatchLow, Superstructure.kHatchMid, Superstructure.kHatchHigh)
 //        @Synchronized get
 
@@ -69,7 +69,7 @@ class HatchStateMachineCommand() : FalconCommand() {
 //            currentCommand.execute()
 //        } catch(E: Exception) { E.printStackTrace()}
     }
-}
+}*/
 
 class IntakeHatchCommand(val releasing: Boolean) : FalconCommand(Intake) {
 
@@ -105,9 +105,9 @@ class IntakeCargoCommand(val releasing: Boolean) : FalconCommand(Intake) {
     }
 
     override fun end(interrupted: Boolean) {
-        Intake.wantsOpen = false
-        Intake.cargoMotorOutput = 3.volt
-        Intake.hatchMotorOutput = 3.volt
+//        Intake.wantsOpen = false
+        Intake.cargoMotorOutput = 3.volt * (if (!releasing) 1 else -1)
+        Intake.hatchMotorOutput = 3.volt * (if (releasing) 1 else -1)
         GlobalScope.launch {
             delay(500)
             Intake.cargoMotorOutput = 0.volt
