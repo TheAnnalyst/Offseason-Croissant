@@ -21,56 +21,56 @@ val openIntake = InstantCommand(Runnable { Intake.wantsOpen = true })
 
 val aButton = 1
 
-/*class HatchStateMachineCommand() : FalconCommand() {
-//    val possibleHatchStates = arrayOf(Superstructure.kHatchLow, Superstructure.kHatchMid, Superstructure.kHatchHigh)
+//class HatchStateMachineCommand() : FalconCommand() {
+////    val possibleHatchStates = arrayOf(Superstructure.kHatchLow, Superstructure.kHatchMid, Superstructure.kHatchHigh)
+////        @Synchronized get
+//
+//    val possibleHatchStates = hashMapOf(0 to Superstructure.kHatchLow, 1 to Superstructure.kHatchMid, 2 to Superstructure.kHatchHigh)
 //        @Synchronized get
-
-    val possibleHatchStates = hashMapOf(0 to Superstructure.kHatchLow, 1 to Superstructure.kHatchMid, 2 to Superstructure.kHatchHigh)
-        @Synchronized get
-
-    var currentCommand: CommandBase =  sequential {  }
-    var wasInitilized = false
-
-
-    var wasPressed = false
-    val source by lazy { driverFalconXbox.getRawButton(aButton) }
-
-    // 0 = lv1, 1=lv2, 2=lv3
-    var currentHatchState = 0
-    override fun initialize() {
-        println("State machine activated")
-    }
-    override fun execute() {
-        if (source() && !wasPressed) {
-            // button is pressed
-//            currentHatchState = (currentHatchState + 1) % (possibleHatchStates.size - 1) // increment hatch state
-            currentHatchState = if(currentHatchState == (possibleHatchStates.size - 1)) 0 else currentHatchState + 1
-            println("currentHatchState: ${currentHatchState}")
-//            println("possibleHatchStates.size: ${possibleHatchStates.size}")
-            currentCommand.end(true)
-            currentCommand = when (currentHatchState) {
-                0 -> Superstructure.kHatchLow
-                1 -> Superstructure.kHatchMid
-                2 -> Superstructure.kHatchHigh
-                else -> sequential {  }
-            }
-
-            currentCommand.schedule()
-
-
-            wasPressed = true
-        } else if(!source()) {
-            wasPressed = false
-        }
-
-//        if(currentCommand.isFinished) currentCommand = sequential {}
-
-//        try {
-//            currentCommand.execute()
-//        } catch(E: Exception) { E.printStackTrace()}
-    }
-}*/
-
+//
+//    var currentCommand: CommandBase =  sequential {  }
+//    var wasInitilized = false
+//
+//
+//    var wasPressed = false
+//    val source by lazy { driverFalconXbox.getRawButton(aButton) }
+//
+//    // 0 = lv1, 1=lv2, 2=lv3
+//    var currentHatchState = 0
+//    override fun initialize() {
+//        println("State machine activated")
+//    }
+//    override fun execute() {
+//        if (source() && !wasPressed) {
+//            // button is pressed
+////            currentHatchState = (currentHatchState + 1) % (possibleHatchStates.size - 1) // increment hatch state
+//            currentHatchState = if(currentHatchState == (possibleHatchStates.size - 1)) 0 else currentHatchState + 1
+//            println("currentHatchState: ${currentHatchState}")
+////            println("possibleHatchStates.size: ${possibleHatchStates.size}")
+//            currentCommand.end(true)
+//            currentCommand = when (currentHatchState) {
+//                0 -> Superstructure.kHatchLow
+//                1 -> Superstructure.kHatchMid
+//                2 -> Superstructure.kHatchHigh
+//                else -> sequential {  }
+//            }
+//
+//            currentCommand.schedule()
+//
+//
+//            wasPressed = true
+//        } else if(!source()) {
+//            wasPressed = false
+//        }
+//
+////       if(currentCommand.isFinished) currentCommand = sequential {}
+//
+////        try {
+////            currentCommand.execute()
+////        } catch(E: Exception) { E.printStackTrace()}
+//    }
+//}
+//
 class IntakeHatchCommand(val releasing: Boolean) : FalconCommand(Intake) {
 
     override fun initialize() {
@@ -88,8 +88,6 @@ class IntakeHatchCommand(val releasing: Boolean) : FalconCommand(Intake) {
 }
 
 class IntakeCargoCommand(val releasing: Boolean) : FalconCommand(Intake) {
-
-
 
 //    var wasOpen: Boolean = false
 

@@ -10,6 +10,7 @@ import frc.robot.subsystems.drive.DriveSubsystem
 import frc.robot.subsystems.drive.TurnInPlaceCommand
 import frc.robot.subsystems.drive.VisionDriveCommand
 //import frc.robot.subsystems.intake.HatchStateMachineCommand
+//import frc.robot.subsystems.intake.HatchStateMachineCommand
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.intake.IntakeCargoCommand
 import frc.robot.subsystems.intake.IntakeHatchCommand
@@ -48,7 +49,7 @@ object Controls : Updatable {
 ////                button(kBumperRight).change(ClosedLoopVisionDriveCommand(true))
         // This should shift ....
         button(kBumperLeft).changeOn { DriveSubsystem.lowGear = !DriveSubsystem.lowGear }
-        //button(kBumperRight).changeOn(HatchStateMachineCommand())
+//        button(kBumperRight).changeOn(HatchStateMachineCommand())
     //} else {
 //                triggerAxisButton(GenericHID.Hand.kRight).change(VisionDriveCommand(true))
 ////                triggerAxisButton(GenericHID.Hand.kRight).change(ClosedLoopVisionDriveCommand(true))
@@ -72,23 +73,25 @@ object Controls : Updatable {
           // button(5).changeOn(Superstructure.kCargoHigh) // .changeOff { Superstructure.kStowed.schedule() }
             //button(8).changeOn(Superstructure.kCargoShip) // .changeOff { Superstructure.kStowed.schedule() }
 
-            // hatch presets
-        // need to make state machine here
+        // Stow (for now like this coz i dont wanna break anything
+//            //button(10).changeOn(Superstructure.kStowed)
+//
+//            //button(9).changeOn(ClosedLoopElevatorMove { Elevator.currentState.position + 1.inch })
+//            //button(11).changeOn(ClosedLoopElevatorMove { Elevator.currentState.position - 1.inch })
+//
+//            // that one passthrough preset that doesnt snap back to normal
+////            button(4).changeOn(Superstructure.kBackHatchFromLoadingStation)
+
+
             button(kA).changeOn(Superstructure.kHatchLow) // .changeOff { Superstructure.kStowed.schedule() }
            button(kB).changeOn(Superstructure.kHatchMid) // .changeOff { Superstructure.kStowed.schedule() }
            button(kY).changeOn(Superstructure.kHatchHigh) // .changeOff { Superstructure.kStowed.schedule() }
-            // Stow (for now like this coz i dont wanna break anything
-            //button(10).changeOn(Superstructure.kStowed)
 
-            //button(9).changeOn(ClosedLoopElevatorMove { Elevator.currentState.position + 1.inch })
-            //button(11).changeOn(ClosedLoopElevatorMove { Elevator.currentState.position - 1.inch })
-
-            // that one passthrough preset that doesnt snap back to normal
-//            button(4).changeOn(Superstructure.kBackHatchFromLoadingStation)
+       button(kBumperRight).change(IntakeHatchCommand(false))
 
             // hatches
-            lessThanAxisButton(1).change(IntakeHatchCommand(releasing = false))
-            greaterThanAxisButton(1).change(IntakeHatchCommand(releasing = true))
+           // lessThanAxisButton(1).change(IntakeHatchCommand(releasing = false))
+          //  greaterThanAxisButton(1).change(IntakeHatchCommand(releasing = true))
 
             // cargo -- intake is a bit tricky, it'll go to the intake preset automatically
             // the lessThanAxisButton represents "intaking", and the greaterThanAxisButton represents "outtaking"
