@@ -20,6 +20,7 @@ import org.ghrobotics.lib.mathematics.units.derived.degree
 import org.ghrobotics.lib.mathematics.units.inch
 import org.ghrobotics.lib.wrappers.hid.* // ktlint-disable no-wildcard-imports
 import org.team5940.pantry.lib.Updatable
+import frc.robot.subsystems.climb.SyncronizedLiftClimbCommand
 
 object Controls : Updatable {
 
@@ -33,9 +34,11 @@ object Controls : Updatable {
         registerEmergencyMode()
 
 //        button(kA).change(TurnInPlaceCommand(90.degree))
-
         button(kB).change(IntakeHatchCommand(false))
         button(kY).change(IntakeHatchCommand(true))
+        // HAB climbers
+        button(kStickLeft).changeOn(ClimbSubsystem.prepMove) // Left joystick prepares HAB lv2 climb
+        button(kStickRight).changeOn(SyncronizedLiftClimbCommand()) // Right joystick does HAB lv2 climb
 //        button(kX).changeOn(CharacterizationCommand(DriveSubsystem))
 
         // Vision align
