@@ -37,8 +37,13 @@ object Controls : Updatable {
         button(kB).change(IntakeHatchCommand(false))
         button(kY).change(IntakeHatchCommand(true))
         // HAB climbers
-        button(kStickLeft).changeOn(ClimbSubsystem.prepMove) // Left joystick prepares HAB lv2 climb
-        button(kStickRight).changeOn(SyncronizedLiftClimbCommand()) // Right joystick does HAB lv2 climb
+
+        button(kStickLeft).changeOn(ClimbSubsystem.prepMove).changeOn{ isClimbing = true } // Left joystick prepares HAB lv2 climb
+
+        state({ isClimbing }) { // Don't climb if we haven't
+            button(kStickRight).changeOn(SyncronizedLiftClimbCommand())git // Right joystick does HAB lv2 climb
+        }
+
 //        button(kX).changeOn(CharacterizationCommand(DriveSubsystem))
 
         // Vision align
