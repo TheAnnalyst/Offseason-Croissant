@@ -38,10 +38,11 @@ object Controls : Updatable {
         button(kY).change(IntakeHatchCommand(true))
         // HAB climbers
 
-        button(kStickLeft).changeOn(ClimbSubsystem.prepMove).changeOn{ isClimbing = true } // Left joystick prepares HAB lv2 climb
+        pov(0).changeOn(ClimbSubsystem.prepMove).changeOn{ isClimbing = true } // dpad down prepares HAB lv2 climb
 
-        state({ isClimbing }) { // Don't climb if we haven't
-            button(kStickRight).changeOn(SyncronizedLiftClimbCommand())git // Right joystick does HAB lv2 climb
+        state({ isClimbing }) { // Don't climb if we haven't prepped.
+           pov(180).changeOn(SyncronizedLiftClimbCommand()) // dpad up does HAB lv2 climb
+            // We don't have a button.
         }
 
 //        button(kX).changeOn(CharacterizationCommand(DriveSubsystem))
